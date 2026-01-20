@@ -93,9 +93,8 @@ extern "C"
     typedef struct SPI_Instance
     {
         SPI_t SPIx;
-        GPIO_t Clock;
-        GPIO_t MasterOutSlaveIn;
-        GPIO_t MasterInSlaveOut;
+
+        SPI_CallbackOnComplete_t OnComplete;
 
         union
         {
@@ -107,6 +106,10 @@ extern "C"
     // #############################################################################
     // #### Public Method(s) #######################################################
     // #############################################################################
+
+    SPI_Status_t SPI_GetInstance( SPI_t SPIx, SPI_Instance_t ** Instance );
+
+    SPI_Status_t SPI_Instance_SetCallbackOnComplete( SPI_Instance_t * Instance, SPI_CallbackOnComplete_t Callback );
 
     // The following APIs MUST be provided by the port
     SPI_Status_t SPI_IsValid( SPI_t SPI );

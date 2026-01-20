@@ -36,9 +36,9 @@
     #define DEBUG
 #endif
 
-#ifdef DEBUG
-    #undef DEBUG
-#endif
+// #ifdef DEBUG
+//    #undef DEBUG
+// #endif
 
 // #############################################################################
 // #### File Guard #############################################################
@@ -124,6 +124,29 @@ static SPI_Status_t SPI_Context_DeInitialize( void )
     do
     {
         SPI_Trace( "%s( void )", __FUNCTION__ );
+
+        Status = SPI_Status_Success;
+    }
+    while ( 0 );
+
+    return Status;
+}
+
+SPI_Status_t SPI_GetInstance( SPI_t SPIx, SPI_Instance_t ** Instance )
+{
+    SPI_Status_t Status = SPI_Status_Error;
+
+    do
+    {
+        SPI_Trace( "%s( SPIx=%d, Instance=%p )", __FUNCTION__, SPIx, Instance );
+
+        if ( Instance == NULL )
+        {
+            Status = SPI_Status_ArgumentInvalid;
+            break;
+        }
+
+        *Instance = &SPI_Context.Instance[ SPIx ];
 
         Status = SPI_Status_Success;
     }
@@ -244,6 +267,38 @@ SPI_Status_t SPI_DeInitialize( SPI_t SPIx )
     return Status;
 }
 
+SPI_Status_t SPI_SetCallbackOnComplete( SPI_t SPIx, SPI_CallbackOnComplete_t Callback )
+{
+    SPI_Status_t Status = SPI_Status_Error;
+
+    do
+    {
+        SPI_Trace( "%s( SPIx=%d, Callback=%p )", __FUNCTION__, SPIx, Callback );
+
+        if ( ( Status = SPI_IsValid( SPIx ) ) != SPI_Status_Success )
+        {
+            break;
+        }
+
+        for ( SPI_t SPI_x = SPI_Null; SPI_x < SPI_Count; ++SPI_x )
+        {
+            if ( SPIx != SPI_All && SPIx != SPI_x )
+            {
+                continue;
+            }
+
+            SPI_Status_t SPI_Status = SPI_Status_Success;
+            if ( ( SPI_Status = SPI_Instance_SetCallbackOnComplete( &SPI_Context.Instance[ SPIx ], Callback ) ) != SPI_Status_Success )
+            {
+                Status = SPI_Status;
+            }
+        }
+    }
+    while ( 0 );
+
+    return Status;
+}
+
 SPI_Status_t SPI_Write( SPI_t SPIx, SPI_Data_t * Data, SPI_DataLength_t DataLength )
 {
     SPI_Status_t Status = SPI_Status_Error;
@@ -299,7 +354,7 @@ SPI_Status_t SPI_Transaction( SPI_t SPIx, SPI_Data_t * DataTx, SPI_DataLength_t 
 // #### Public Variable(s) #####################################################
 // #############################################################################
 
-const char SPI_VERSION[] = "0.0.0.v20260117-1502";
+const char SPI_VERSION[] = "0.0.0.v20260120-0211";
 
 // #############################################################################
 // #### File Guard #############################################################

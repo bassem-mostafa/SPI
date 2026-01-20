@@ -78,74 +78,20 @@
 // #### Public Method(s) #######################################################
 // #############################################################################
 
-LOG_Status_t SPI_LOG_Raw( LOG_Level_t LOG_Level, LOG_Format_t LOG_Format, ... )
+SPI_Status_t SPI_Instance_SetCallbackOnComplete( SPI_Instance_t * Instance, SPI_CallbackOnComplete_t Callback )
 {
-    LOG_Status_t LOG_Status = LOG_Status_Success;
-    va_list args;
-    va_start( args, LOG_Format );
-    LOG_Status = LOG_RawWithArgs( SPI_LOG, LOG_Level, LOG_Format, args );
-    va_end( args );
-    return LOG_Status;
-}
+    SPI_Status_t Status = SPI_Status_Error;
 
-LOG_Status_t SPI_LOG_Trace( LOG_Format_t LOG_Format, ... )
-{
-    LOG_Status_t LOG_Status = LOG_Status_Success;
-    va_list args;
-    va_start( args, LOG_Format );
-    LOG_Status = LOG_TraceWithArgs( SPI_LOG, LOG_Format, args );
-    va_end( args );
-    return LOG_Status;
-}
+    do
+    {
+        SPI_Trace( "%s( Instance=%p, Callback=%p )", __FUNCTION__, Instance, Callback );
 
-LOG_Status_t SPI_LOG_Debug( LOG_Format_t LOG_Format, ... )
-{
-    LOG_Status_t LOG_Status = LOG_Status_Success;
-    va_list args;
-    va_start( args, LOG_Format );
-    LOG_Status = LOG_DebugWithArgs( SPI_LOG, LOG_Format, args );
-    va_end( args );
-    return LOG_Status;
-}
+        Instance->OnComplete = Callback;
+        Status = SPI_Status_Success;
+    }
+    while ( 0 );
 
-LOG_Status_t SPI_LOG_Info( LOG_Format_t LOG_Format, ... )
-{
-    LOG_Status_t LOG_Status = LOG_Status_Success;
-    va_list args;
-    va_start( args, LOG_Format );
-    LOG_Status = LOG_InfoWithArgs( SPI_LOG, LOG_Format, args );
-    va_end( args );
-    return LOG_Status;
-}
-
-LOG_Status_t SPI_LOG_Warning( LOG_Format_t LOG_Format, ... )
-{
-    LOG_Status_t LOG_Status = LOG_Status_Success;
-    va_list args;
-    va_start( args, LOG_Format );
-    LOG_Status = LOG_WarningWithArgs( SPI_LOG, LOG_Format, args );
-    va_end( args );
-    return LOG_Status;
-}
-
-LOG_Status_t SPI_LOG_Error( LOG_Format_t LOG_Format, ... )
-{
-    LOG_Status_t LOG_Status = LOG_Status_Success;
-    va_list args;
-    va_start( args, LOG_Format );
-    LOG_Status = LOG_ErrorWithArgs( SPI_LOG, LOG_Format, args );
-    va_end( args );
-    return LOG_Status;
-}
-
-LOG_Status_t SPI_LOG_Fatal( LOG_Format_t LOG_Format, ... )
-{
-    LOG_Status_t LOG_Status = LOG_Status_Success;
-    va_list args;
-    va_start( args, LOG_Format );
-    LOG_Status = LOG_FatalWithArgs( SPI_LOG, LOG_Format, args );
-    va_end( args );
-    return LOG_Status;
+    return Status;
 }
 
 // #############################################################################

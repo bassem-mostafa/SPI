@@ -110,6 +110,16 @@ extern "C"
      */
     typedef uint32_t SPI_DataLength_t;
 
+    /**
+     *  @brief SPI On-Complete Callback
+     *
+     *  @param[in] SPIx   Instance
+     *  @param[in] Status Execution status
+     *
+     *  @return SPI_Status_t
+     */
+    typedef SPI_Status_t ( *SPI_CallbackOnComplete_t )( SPI_t SPIx, SPI_Status_t Status );
+
     // #############################################################################
     // #### Public Method(s) #######################################################
     // #############################################################################
@@ -142,6 +152,16 @@ extern "C"
      *  @return SPI_Status_t
      */
     SPI_Status_t SPI_DeInitialize( SPI_t SPIx );
+
+    /**
+     *  @brief Set callback for on-complete of SPI instance
+     *
+     *  @param[in] SPIx     Instance
+     *  @param[in] Callback On-complete callback
+     *
+     *  @return SPI_Status_t
+     */
+    SPI_Status_t SPI_SetCallbackOnComplete( SPI_t SPIx, SPI_CallbackOnComplete_t Callback );
 
     /**
      *  @brief Write data to SPI peripheral
