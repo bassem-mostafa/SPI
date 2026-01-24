@@ -84,7 +84,7 @@ static SPI_Context_t SPI_Context;
 
 static SPI_Status_t SPI_Context_Initialize( void )
 {
-    SPI_Status_t Status = SPI_Status_Error;
+    SPI_Status_t Status = SPI_Status_Success;
 
     do
     {
@@ -94,8 +94,6 @@ static SPI_Status_t SPI_Context_Initialize( void )
         {
             SPI_Context.Instance[ SPI_x ].SPIx = SPI_x;
         }
-
-        Status = SPI_Status_Success;
     }
     while ( 0 );
 
@@ -104,13 +102,11 @@ static SPI_Status_t SPI_Context_Initialize( void )
 
 static SPI_Status_t SPI_Context_Cycle( void )
 {
-    SPI_Status_t Status = SPI_Status_Error;
+    SPI_Status_t Status = SPI_Status_Success;
 
     do
     {
         SPI_Trace( "%s( void )", __FUNCTION__ );
-
-        Status = SPI_Status_Success;
     }
     while ( 0 );
 
@@ -119,13 +115,11 @@ static SPI_Status_t SPI_Context_Cycle( void )
 
 static SPI_Status_t SPI_Context_DeInitialize( void )
 {
-    SPI_Status_t Status = SPI_Status_Error;
+    SPI_Status_t Status = SPI_Status_Success;
 
     do
     {
         SPI_Trace( "%s( void )", __FUNCTION__ );
-
-        Status = SPI_Status_Success;
     }
     while ( 0 );
 
@@ -134,7 +128,7 @@ static SPI_Status_t SPI_Context_DeInitialize( void )
 
 SPI_Status_t SPI_GetInstance( SPI_t SPIx, SPI_Instance_t ** Instance )
 {
-    SPI_Status_t Status = SPI_Status_Error;
+    SPI_Status_t Status = SPI_Status_Success;
 
     do
     {
@@ -147,8 +141,6 @@ SPI_Status_t SPI_GetInstance( SPI_t SPIx, SPI_Instance_t ** Instance )
         }
 
         *Instance = &SPI_Context.Instance[ SPIx ];
-
-        Status = SPI_Status_Success;
     }
     while ( 0 );
 
@@ -161,7 +153,7 @@ SPI_Status_t SPI_GetInstance( SPI_t SPIx, SPI_Instance_t ** Instance )
 
 SPI_Status_t SPI_Initialize( SPI_t SPIx )
 {
-    SPI_Status_t Status = SPI_Status_Error;
+    SPI_Status_t Status = SPI_Status_Success;
 
     do
     {
@@ -184,10 +176,10 @@ SPI_Status_t SPI_Initialize( SPI_t SPIx )
                 continue;
             }
 
-            SPI_Status_t Status = SPI_Status_Success;
-            if ( ( Status = SPI_Instance_Initialize( &SPI_Context.Instance[ SPI_x ] ) ) != SPI_Status_Success )
+            SPI_Status_t SPI_Status = SPI_Status_Success;
+            if ( ( SPI_Status = SPI_Instance_Initialize( &SPI_Context.Instance[ SPI_x ] ) ) != SPI_Status_Success )
             {
-                Status = Status;
+                Status = SPI_Status;
             }
         }
     }
@@ -198,7 +190,7 @@ SPI_Status_t SPI_Initialize( SPI_t SPIx )
 
 SPI_Status_t SPI_Cycle( SPI_t SPIx )
 {
-    SPI_Status_t Status = SPI_Status_Error;
+    SPI_Status_t Status = SPI_Status_Success;
 
     do
     {
@@ -221,10 +213,10 @@ SPI_Status_t SPI_Cycle( SPI_t SPIx )
                 continue;
             }
 
-            SPI_Status_t Status = SPI_Status_Success;
-            if ( ( Status = SPI_Instance_Cycle( &SPI_Context.Instance[ SPI_x ] ) ) != SPI_Status_Success )
+            SPI_Status_t SPI_Status = SPI_Status_Success;
+            if ( ( SPI_Status = SPI_Instance_Cycle( &SPI_Context.Instance[ SPI_x ] ) ) != SPI_Status_Success )
             {
-                Status = Status;
+                Status = SPI_Status;
             }
         }
     }
@@ -235,7 +227,7 @@ SPI_Status_t SPI_Cycle( SPI_t SPIx )
 
 SPI_Status_t SPI_DeInitialize( SPI_t SPIx )
 {
-    SPI_Status_t Status = SPI_Status_Error;
+    SPI_Status_t Status = SPI_Status_Success;
 
     do
     {
@@ -253,10 +245,10 @@ SPI_Status_t SPI_DeInitialize( SPI_t SPIx )
                 continue;
             }
 
-            SPI_Status_t Status = SPI_Status_Success;
-            if ( ( Status = SPI_Instance_DeInitialize( &SPI_Context.Instance[ SPI_x ] ) ) != SPI_Status_Success )
+            SPI_Status_t SPI_Status = SPI_Status_Success;
+            if ( ( SPI_Status = SPI_Instance_DeInitialize( &SPI_Context.Instance[ SPI_x ] ) ) != SPI_Status_Success )
             {
-                Status = Status;
+                Status = SPI_Status;
             }
         }
 
@@ -269,7 +261,7 @@ SPI_Status_t SPI_DeInitialize( SPI_t SPIx )
 
 SPI_Status_t SPI_SetCallbackOnComplete( SPI_t SPIx, SPI_CallbackOnComplete_t Callback )
 {
-    SPI_Status_t Status = SPI_Status_Error;
+    SPI_Status_t Status = SPI_Status_Success;
 
     do
     {
@@ -301,52 +293,67 @@ SPI_Status_t SPI_SetCallbackOnComplete( SPI_t SPIx, SPI_CallbackOnComplete_t Cal
 
 SPI_Status_t SPI_Write( SPI_t SPIx, SPI_Data_t * Data, SPI_DataLength_t DataLength )
 {
-    SPI_Status_t Status = SPI_Status_Error;
+    SPI_Status_t Status = SPI_Status_Success;
+
     do
     {
         SPI_Trace( "%s( SPI=%d, Data=%p, Length=%d )", __FUNCTION__, SPIx, Data, DataLength );
+
         if ( ( Status = SPI_IsValid( SPIx ) ) != SPI_Status_Success )
         {
             break;
         }
+
         SPI_Instance_t * SPI_Instance = &SPI_Context.Instance[ SPIx ];
+
         Status = SPI_Instance_Write( SPI_Instance, Data, DataLength );
     }
     while ( 0 );
+
     return Status;
 }
 
 SPI_Status_t SPI_Read( SPI_t SPIx, SPI_Data_t * Data, SPI_DataLength_t DataLength )
 {
-    SPI_Status_t Status = SPI_Status_Error;
+    SPI_Status_t Status = SPI_Status_Success;
+
     do
     {
         SPI_Trace( "%s( SPI=%d, Data=%p, Length=%d )", __FUNCTION__, SPIx, Data, DataLength );
+
         if ( ( Status = SPI_IsValid( SPIx ) ) != SPI_Status_Success )
         {
             break;
         }
+
         SPI_Instance_t * SPI_Instance = &SPI_Context.Instance[ SPIx ];
+
         Status = SPI_Instance_Read( SPI_Instance, Data, DataLength );
     }
     while ( 0 );
+
     return Status;
 }
 
 SPI_Status_t SPI_Transaction( SPI_t SPIx, SPI_Data_t * DataTx, SPI_DataLength_t DataTxLength, SPI_Data_t * DataRx, SPI_DataLength_t DataRxLength )
 {
-    SPI_Status_t Status = SPI_Status_Error;
+    SPI_Status_t Status = SPI_Status_Success;
+
     do
     {
         SPI_Trace( "%s( SPI=%d, TX={Data=%p, Length=%d} RX={Data=%p, Length=%d} )", __FUNCTION__, SPIx, DataTx, DataTxLength, DataRx, DataRxLength );
+
         if ( ( Status = SPI_IsValid( SPIx ) ) != SPI_Status_Success )
         {
             break;
         }
+
         SPI_Instance_t * SPI_Instance = &SPI_Context.Instance[ SPIx ];
+
         Status = SPI_Instance_Transaction( SPI_Instance, DataTx, DataTxLength, DataRx, DataRxLength );
     }
     while ( 0 );
+
     return Status;
 }
 
@@ -354,7 +361,7 @@ SPI_Status_t SPI_Transaction( SPI_t SPIx, SPI_Data_t * DataTx, SPI_DataLength_t 
 // #### Public Variable(s) #####################################################
 // #############################################################################
 
-const char SPI_VERSION[] = "0.0.0.v20260124-1653";
+const char SPI_VERSION[] = "0.0.0.v20260125-0138";
 
 // #############################################################################
 // #### File Guard #############################################################
