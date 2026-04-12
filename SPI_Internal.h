@@ -88,7 +88,7 @@ extern "C"
     // #### Public Type(s) #########################################################
     // #############################################################################
 
-    typedef struct SPI_Instance_Context_t SPI_Instance_Context_t;
+    typedef struct SPI_InstanceContext_t SPI_InstanceContext_t;
 
     typedef struct SPI_Instance
     {
@@ -98,7 +98,7 @@ extern "C"
 
         union
         {
-            SPI_Instance_Context_t * Context;
+            SPI_InstanceContext_t * Context;
             SPI_STM32L496VGT6P_Instance_t * STM32L496VGT6P;
         };
     } SPI_Instance_t;
