@@ -198,8 +198,6 @@ extern "C"
      */
     SPI_Status_t SPI_Transaction( SPI_t SPIx, SPI_Data_t * DataTx, SPI_DataLength_t DataTxLength, SPI_Data_t * DataRx, SPI_DataLength_t DataRxLength );
 
-    // TODO More APIs
-
     // #############################################################################
     // #### Public Variable(s) #####################################################
     // #############################################################################
