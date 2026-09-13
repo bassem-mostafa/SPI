@@ -51,9 +51,6 @@
 #include "SPI.h"
 #include "SPI_Internal.h"
 
-#include <stddef.h>
-#include <stdio.h>
-
 // #############################################################################
 // #### Private Macro(s) #######################################################
 // #############################################################################
@@ -77,22 +74,6 @@
 // #############################################################################
 // #### Public Method(s) #######################################################
 // #############################################################################
-
-SPI_Status_t SPI_Instance_SetCallbackOnComplete( SPI_Instance_t * Instance, SPI_CallbackOnComplete_t Callback )
-{
-    SPI_Status_t Status = SPI_Status_Error;
-
-    do
-    {
-        SPI_Trace( "%s( Instance=%p, Callback=%p )", __FUNCTION__, Instance, Callback );
-
-        Instance->OnComplete = Callback;
-        Status = SPI_Status_Success;
-    }
-    while ( 0 );
-
-    return Status;
-}
 
 // #############################################################################
 // #### Public Variable(s) #####################################################

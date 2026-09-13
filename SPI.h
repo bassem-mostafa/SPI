@@ -111,14 +111,31 @@ extern "C"
     typedef uint32_t SPI_DataLength_t;
 
     /**
-     *  @brief SPI On-Complete Callback
+     *  @brief SPI Callback Context
+     */
+    typedef void SPI_CallbackContext_t;
+
+    /**
+     *  @brief SPI Callback On Complete
      *
-     *  @param[in] SPIx   Instance
-     *  @param[in] Status Execution status
+     *  @param[in] SPIx    Instance
+     *  @param[in] Status  Execution status
+     *  @param[in] Context On-Complete context
      *
      *  @return SPI_Status_t
      */
-    typedef SPI_Status_t ( *SPI_CallbackOnComplete_t )( SPI_t SPIx, SPI_Status_t Status );
+    typedef SPI_Status_t( SPI_CallbackOnComplete_t )( SPI_t SPIx, SPI_Status_t Status, SPI_CallbackContext_t * Context );
+
+    /**
+     *  @brief SPI On Complete Configuration
+     *
+     *  @struct SPI_OnComplete_t
+     */
+    typedef struct SPI_OnComplete
+    {
+        SPI_CallbackOnComplete_t * Callback;
+        SPI_CallbackContext_t * Context;
+    } SPI_OnComplete_t;
 
     // #############################################################################
     // #### Public Method(s) #######################################################
@@ -156,12 +173,12 @@ extern "C"
     /**
      *  @brief Set callback for on-complete of SPI instance
      *
-     *  @param[in] SPIx     Instance
-     *  @param[in] Callback On-complete callback
+     *  @param[in] SPIx       Instance
+     *  @param[in] OnComplete On-complete configuration
      *
      *  @return SPI_Status_t
      */
-    SPI_Status_t SPI_SetCallbackOnComplete( SPI_t SPIx, SPI_CallbackOnComplete_t Callback );
+    SPI_Status_t SPI_SetOnComplete( SPI_t SPIx, SPI_OnComplete_t OnComplete );
 
     /**
      *  @brief Write data to SPI peripheral

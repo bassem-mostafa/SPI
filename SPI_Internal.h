@@ -48,7 +48,7 @@ extern "C"
     // #### Include(s) #############################################################
     // #############################################################################
 
-    #include "SPI_Port.h"
+    #include "SPI.h"
     #include "driver/STM32L496VGT6P/SPI_STM32L496VGT6P.h"
 
     // #############################################################################
@@ -88,39 +88,41 @@ extern "C"
     // #### Public Type(s) #########################################################
     // #############################################################################
 
-    typedef struct SPI_InstanceContext_t SPI_InstanceContext_t;
+    typedef enum SPI_Type
+    {
+        SPI_Type_Unknown = 0,
+        SPI_Type_Null,
+        SPI_Type_STM32L496VGT6P,
+    } SPI_Type_t;
 
     typedef struct SPI_Instance
     {
-        SPI_t SPIx;
-
-        SPI_CallbackOnComplete_t OnComplete;
+        SPI_Type_t Type;
 
         union
         {
-            SPI_InstanceContext_t * Context;
-            SPI_STM32L496VGT6P_Instance_t * STM32L496VGT6P;
+            SPI_STM32L496VGT6P_t STM32L496VGT6Px;
         };
+
+        GPIO_t ChipSelect;
+
+        SPI_OnComplete_t OnComplete;
     } SPI_Instance_t;
 
     // #############################################################################
     // #### Public Method(s) #######################################################
     // #############################################################################
 
-    SPI_Status_t SPI_GetInstance( SPI_t SPIx, SPI_Instance_t ** Instance );
-
-    SPI_Status_t SPI_Instance_SetCallbackOnComplete( SPI_Instance_t * Instance, SPI_CallbackOnComplete_t Callback );
-
     // The following APIs MUST be provided by the port
-    SPI_Status_t SPI_IsValid( SPI_t SPI );
+    SPI_Status_t SPI_Port_Initialize( SPI_t SPIx );
+    SPI_Status_t SPI_Port_Cycle( SPI_t SPIx );
+    SPI_Status_t SPI_Port_DeInitialize( SPI_t SPIx );
 
-    SPI_Status_t SPI_Instance_Initialize( SPI_Instance_t * SPI_Instance );
-    SPI_Status_t SPI_Instance_Cycle( SPI_Instance_t * SPI_Instance );
-    SPI_Status_t SPI_Instance_DeInitialize( SPI_Instance_t * SPI_Instance );
+    SPI_Status_t SPI_Port_SetOnComplete( SPI_t SPIx, SPI_OnComplete_t * OnComplete );
 
-    SPI_Status_t SPI_Instance_Write( SPI_Instance_t * SPI_Instance, SPI_Data_t * SPI_Data, SPI_DataLength_t SPI_DataLength );
-    SPI_Status_t SPI_Instance_Read( SPI_Instance_t * SPI_Instance, SPI_Data_t * SPI_Data, SPI_DataLength_t SPI_DataLength );
-    SPI_Status_t SPI_Instance_Transaction( SPI_Instance_t * SPI_Instance, SPI_Data_t * SPI_DataTx, SPI_DataLength_t SPI_DataTxLength, SPI_Data_t * SPI_DataRx, SPI_DataLength_t SPI_DataRxLength );
+    SPI_Status_t SPI_Port_Write( SPI_t SPIx, SPI_Data_t * Data, SPI_DataLength_t DataLength );
+    SPI_Status_t SPI_Port_Read( SPI_t SPIx, SPI_Data_t * Data, SPI_DataLength_t DataLength );
+    SPI_Status_t SPI_Port_Transaction( SPI_t SPIx, SPI_Data_t * DataTx, SPI_DataLength_t DataTxLength, SPI_Data_t * DataRx, SPI_DataLength_t DataRxLength );
 
     // #############################################################################
     // #### Public Variable(s) #####################################################
